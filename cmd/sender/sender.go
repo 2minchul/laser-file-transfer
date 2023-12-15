@@ -63,6 +63,7 @@ func main() {
 
 	// 데이터 전송
 	transmitData(reader, pin)
+	println()
 }
 
 func transmitData(reader io.Reader, pin rpio.Pin) {
@@ -85,8 +86,10 @@ func sendByte(pin rpio.Pin, b byte) {
 	for i := 0; i < 8; i++ {
 		bit := (b >> (7 - i)) & 1
 		if bit == 1 {
+			fmt.Print("1")
 			pin.High()
 		} else {
+			fmt.Print("0")
 			pin.Low()
 		}
 		time.Sleep(constants.Delay)
