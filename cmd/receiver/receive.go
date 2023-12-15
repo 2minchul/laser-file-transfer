@@ -71,7 +71,7 @@ func main() {
 			case event := <-ch:
 				diff := event.Time.Sub(previousTime)
 				previousTime = event.Time
-				fmt.Println(diff)
+				fmt.Println(diff, diff/constants.Delay)
 				if diff > time.Minute {
 					fmt.Println("skip... no data in 1 min")
 					i = 0
