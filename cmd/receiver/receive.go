@@ -87,7 +87,7 @@ func main() {
 				if event.IsUpperRange {
 					char = "1"
 				}
-				fmt.Print(strings.Repeat(char, int(cnt)))
+				fmt.Println(strings.Repeat(char, int(cnt)))
 
 				// event.IsUpperRange 가 cnt 만큼 반복된 bit 를 byte 로 만들어서 writer 에 쓴다.
 				for j := 0; j < int(cnt); j++ {
