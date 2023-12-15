@@ -89,12 +89,15 @@ func main() {
 						state = start1State
 					}
 				case start1State:
+					fmt.Println(diff, float64(diff)/float64(constants.StartDelay2))
 					if math.Round(float64(diff)/float64(constants.StartDelay2)) == 1 {
 						state = receivingState
 						b = 0
 						i = 0
 						fmt.Println("change to receivingState")
+						continue
 					}
+					state = waitState
 				case receivingState:
 					if diff > time.Minute {
 						fmt.Println("skip... no data in 1 min")
