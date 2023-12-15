@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"os"
@@ -22,11 +24,18 @@ func main() {
 			return nil, err
 		}
 		defer f.Close()
-		content, err := io.ReadAll(f)
+		gzipBuf := bytes.NewBuffer(nil)
+		gz, err := gzip.NewWriterLevel(gzipBuf, gzip.BestCompression)
 		if err != nil {
-			err = fmt.Errorf("cannot read file: %w", err)
 			return nil, err
 		}
+		_, err = io.Copy(gz, f)
+		if err != nil {
+			return nil, err
+		}
+		gz.Flush()
+		gz.Close()
+		content := gzipBuf.Bytes()
 		msg := &protocol.FileMessage{
 			FileNameSize: len(filename),
 			FileName:     filename,
