@@ -20,6 +20,14 @@ type StateChangeEvent struct {
 	Time         time.Time
 }
 
+type State int
+
+const (
+	waitState = iota
+	start1State
+	receivingState
+)
+
 func main() {
 	err := rpio.Open()
 	if err != nil {
@@ -63,6 +71,7 @@ func main() {
 
 	reader, writer := io.Pipe()
 	go func() {
+		state := waitState
 		previousTime := time.Now()
 		var b byte
 		var i int
@@ -71,38 +80,51 @@ func main() {
 			case event := <-ch:
 				diff := event.Time.Sub(previousTime)
 				previousTime = event.Time
-				fmt.Println(diff, float64(diff)/float64(constants.Delay))
-				if diff > time.Minute {
-					fmt.Println("skip... no data in 1 min")
-					i = 0
-					b = 0
-					continue
-				}
-				cnt := math.Round(float64(diff) / float64(constants.Delay))
-				if cnt == 0 {
-					continue
-				}
 
-				char := "0"
-				if event.IsUpperRange {
-					char = "1"
-				}
-				fmt.Println(strings.Repeat(char, int(cnt)))
-
-				// event.IsUpperRange 가 cnt 만큼 반복된 bit 를 byte 로 만들어서 writer 에 쓴다.
-				for j := 0; j < int(cnt); j++ {
-					b = b << 1
-					if event.IsUpperRange {
-						b = b | 1
+				switch state {
+				case waitState:
+					if math.Round(float64(diff)/float64(constants.StartDelay1)) == 1 {
+						state = start1State
 					}
-					i++
-					if i == 8 {
-						writer.Write([]byte{b})
+				case start1State:
+					if math.Round(float64(diff)/float64(constants.StartDelay2)) == 1 {
+						state = receivingState
+						b = 0
+						i = 0
+					}
+				case receivingState:
+					fmt.Println(diff, float64(diff)/float64(constants.Delay))
+					if diff > time.Minute {
+						fmt.Println("skip... no data in 1 min")
 						i = 0
 						b = 0
+						continue
+					}
+					cnt := math.Round(float64(diff) / float64(constants.Delay))
+					if cnt == 0 {
+						continue
+					}
+
+					char := "0"
+					if event.IsUpperRange {
+						char = "1"
+					}
+					fmt.Println(strings.Repeat(char, int(cnt)))
+
+					// event.IsUpperRange 가 cnt 만큼 반복된 bit 를 byte 로 만들어서 writer 에 쓴다.
+					for j := 0; j < int(cnt); j++ {
+						b = b << 1
+						if event.IsUpperRange {
+							b = b | 1
+						}
+						i++
+						if i == 8 {
+							writer.Write([]byte{b})
+							i = 0
+							b = 0
+						}
 					}
 				}
-
 			}
 		}
 	}()

@@ -68,6 +68,12 @@ func main() {
 
 func transmitData(reader io.Reader, pin rpio.Pin) {
 	pin.Toggle()
+	pin.Toggle()
+	pin.High()
+	time.Sleep(constants.StartDelay1)
+	pin.Low()
+	time.Sleep(constants.StartDelay2)
+
 	buffer := make([]byte, 1)
 	for {
 		n, err := reader.Read(buffer)
