@@ -83,6 +83,7 @@ func main() {
 
 				switch state {
 				case waitState:
+					fmt.Println(diff, float64(diff)/float64(constants.StartDelay1))
 					if math.Round(float64(diff)/float64(constants.StartDelay1)) == 1 {
 						fmt.Println("change to start1State")
 						state = start1State
@@ -95,11 +96,9 @@ func main() {
 						fmt.Println("change to receivingState")
 					}
 				case receivingState:
-					fmt.Println(diff, float64(diff)/float64(constants.Delay))
 					if diff > time.Minute {
 						fmt.Println("skip... no data in 1 min")
-						i = 0
-						b = 0
+						state = waitState
 						continue
 					}
 					cnt := math.Round(float64(diff) / float64(constants.Delay))
