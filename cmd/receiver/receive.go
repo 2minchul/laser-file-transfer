@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"compress/gzip"
 	"fmt"
 	"io"
 	"math"
@@ -24,7 +22,7 @@ type StateChangeEvent struct {
 type State int
 
 const (
-	waitState State = iota
+	waitState = iota
 	start1State
 	receivingState
 )
@@ -150,23 +148,12 @@ func main() {
 			return
 		}
 		defer f.Close()
-		gz, err := gzip.NewReader(bytes.NewReader(m.Content))
+		_, err = f.Write(m.Content)
 		if err != nil {
-			err = fmt.Errorf("failed to decompress: %w", err)
+			err = fmt.Errorf("failed to write to file %s: %w", m.FileName, err)
 			fmt.Println(err)
 			return
 		}
-		_, err = io.Copy(f, gz)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		//_, err = f.Write(m.Content)
-		//if err != nil {
-		//	err = fmt.Errorf("failed to write to file %s: %w", m.FileName, err)
-		//	fmt.Println(err)
-		//	return
-		//}
 		fmt.Printf("file %s saved!\n", m.FileName)
 	}()
 
