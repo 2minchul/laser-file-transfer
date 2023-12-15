@@ -78,6 +78,9 @@ func main() {
 					continue
 				}
 				cnt := math.Round(float64(diff / constants.Delay))
+				if cnt == 0 {
+					continue
+				}
 
 				char := "0"
 				if event.IsUpperRange {
