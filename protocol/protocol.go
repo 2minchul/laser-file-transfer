@@ -19,7 +19,7 @@ type FileMessage struct {
 func (m *FileMessage) WriteTo(writer io.Writer) (int64, error) {
 	var written int64
 	startByte := byte(constants.StartPattern)
-	n, err := writer.Write([]byte{'0', '1', startByte})
+	n, err := writer.Write([]byte{startByte})
 	if err != nil {
 		return written, err
 	}
