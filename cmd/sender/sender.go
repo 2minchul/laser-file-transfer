@@ -84,7 +84,7 @@ func transmitData(reader io.Reader, pin rpio.Pin) {
 func sendByte(pin rpio.Pin, b byte) {
 	for i := 0; i < 8; i++ {
 		bit := (b >> (7 - i)) & 1
-		if bit == 0 {
+		if bit == 1 {
 			pin.High()
 		} else {
 			pin.Low()
