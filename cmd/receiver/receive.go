@@ -84,6 +84,7 @@ func main() {
 				switch state {
 				case waitState:
 					if math.Round(float64(diff)/float64(constants.StartDelay1)) == 1 {
+						fmt.Println("change to start1State")
 						state = start1State
 					}
 				case start1State:
@@ -91,6 +92,7 @@ func main() {
 						state = receivingState
 						b = 0
 						i = 0
+						fmt.Println("change to receivingState")
 					}
 				case receivingState:
 					fmt.Println(diff, float64(diff)/float64(constants.Delay))

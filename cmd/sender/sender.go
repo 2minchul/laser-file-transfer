@@ -68,7 +68,6 @@ func main() {
 
 func transmitData(reader io.Reader, pin rpio.Pin) {
 	pin.Toggle()
-	pin.Toggle()
 	pin.High()
 	time.Sleep(constants.StartDelay1)
 	pin.Low()
