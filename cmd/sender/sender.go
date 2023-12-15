@@ -67,6 +67,7 @@ func main() {
 }
 
 func transmitData(reader io.Reader, pin rpio.Pin) {
+	pin.Toggle()
 	buffer := make([]byte, 1)
 	for {
 		n, err := reader.Read(buffer)
@@ -80,6 +81,7 @@ func transmitData(reader io.Reader, pin rpio.Pin) {
 			sendByte(pin, buffer[0])
 		}
 	}
+	pin.Toggle()
 }
 
 func sendByte(pin rpio.Pin, b byte) {
