@@ -49,6 +49,7 @@ func main() {
 			level := pin.Read()
 			value := float64(level * 100)
 			st.SetCurrentValue(value)
+			time.Sleep(time.Millisecond)
 		}
 	}()
 
