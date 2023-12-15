@@ -7,6 +7,6 @@ const (
 	WritePinNumber = 17
 	Delay          = 300 * time.Millisecond
 	StartPattern   = 0b10000110
-	StartDelay1    = 900 * time.Millisecond
-	StartDelay2    = 450 * time.Millisecond
+	StartDelay1    = 90 * time.Millisecond
+	StartDelay2    = 45 * time.Millisecond
 )
