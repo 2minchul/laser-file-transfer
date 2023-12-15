@@ -133,29 +133,28 @@ func main() {
 		}
 	}()
 
-	for {
-		fmt.Println("waiting ...")
-		m, err := protocol.ReadFileMessage(reader)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-
-		func() {
-			f, err := os.Create(m.FileName)
-			if err != nil {
-				err = fmt.Errorf("failed to create file %s: %w", m.FileName, err)
-				fmt.Println(err)
-				return
-			}
-			defer f.Close()
-			_, err = f.Write(m.Content)
-			if err != nil {
-				err = fmt.Errorf("failed to write to file %s: %w", m.FileName, err)
-				fmt.Println(err)
-				return
-			}
-			fmt.Printf("file %s saved!\n", m.FileName)
-		}()
+	fmt.Println("waiting ...")
+	m, err := protocol.ReadFileMessage(reader)
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
+
+	func() {
+		f, err := os.Create(m.FileName)
+		if err != nil {
+			err = fmt.Errorf("failed to create file %s: %w", m.FileName, err)
+			fmt.Println(err)
+			return
+		}
+		defer f.Close()
+		_, err = f.Write(m.Content)
+		if err != nil {
+			err = fmt.Errorf("failed to write to file %s: %w", m.FileName, err)
+			fmt.Println(err)
+			return
+		}
+		fmt.Printf("file %s saved!\n", m.FileName)
+	}()
+
 }
